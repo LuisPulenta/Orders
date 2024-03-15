@@ -4,15 +4,15 @@ using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 using System.Net;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Pages.Categories
 {
-    public partial class CountriesIndex
+    public partial class CategoriesIndex
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
-        private List<Country>? Countries;
+        private List<Category>? Categories;
 
         //-----------------------------------------------------------------------------------
         protected async override Task OnInitializedAsync()
@@ -23,23 +23,23 @@ namespace Orders.Frontend.Pages.Countries
         //-----------------------------------------------------------------------------------
         private async Task LoadAsync()
         {
-            var responseHppt = await Repository.GetAsync<List<Country>>("api/countries");
+            var responseHppt = await Repository.GetAsync<List<Category>>("api/categories");
             if (responseHppt.Error)
             {
                 var message = await responseHppt.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            Countries = responseHppt.Response!;
+            Categories = responseHppt.Response!;
         }
 
         //-----------------------------------------------------------------------------------
-        private async Task DeleteAsync(Country country)
+        private async Task DeleteAsync(Category category)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Está seguro que quieres borrar el país: {country.Name}?",
+                Text = $"¿Está seguro que quieres borrar la categoría: {category.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -51,7 +51,7 @@ namespace Orders.Frontend.Pages.Countries
                 return;
             }
 
-            var responseHttp = await Repository.DeleteAsync($"api/countries/{country.Id}");
+            var responseHttp = await Repository.DeleteAsync($"api/categories/{category.Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -65,7 +65,7 @@ namespace Orders.Frontend.Pages.Countries
                 }
                 return;
             }
-            
+
             await LoadAsync();
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
