@@ -2,30 +2,29 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
-using Orders.Shared.Entities;
+using Orders.Shared.Interfaces;
 
-namespace Orders.Frontend.Pages.Categories
+namespace Orders.Frontend.Shared
 {
-    public partial class CategoryForm
+    public partial class FormWithName<TModel> where TModel : IEntityWithName
     {
         private EditContext editContext = null!;
 
-        [EditorRequired, Parameter] public Category Category { get; set; } = null!;
+        [EditorRequired, Parameter] public TModel Model { get; set; } = default!;
+        [EditorRequired, Parameter] public string Label { get; set; } = null!;
         [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
         [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] public SweetAlertService SweetAlertService { get; set; } = null!;
+        public bool FormPostedSuccessfully { get; set; }
 
         protected override void OnInitialized()
         {
-            editContext = new(Category);
+            editContext = new(Model!);
         }
-
-        public bool FormPostedSuccessfully { get; set; } = false;
 
         private async Task OnBeforeInternalNavigation(LocationChangingContext context)
         {
             var formWasEdited = editContext.IsModified();
-
             if (!formWasEdited || FormPostedSuccessfully)
             {
                 return;
@@ -35,16 +34,15 @@ namespace Orders.Frontend.Pages.Categories
             {
                 Title = "Confirmación",
                 Text = "¿Deseas abandonar la página y perder los cambios?",
-                Icon = SweetAlertIcon.Warning,
-                ShowCancelButton = true
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
             });
-
             var confirm = !string.IsNullOrEmpty(result.Value);
-
             if (confirm)
             {
                 return;
             }
+
             context.PreventNavigation();
         }
     }
