@@ -41,7 +41,9 @@ namespace Orders.Frontend.Pages.Categories
                 Title = "Confirmación",
                 Text = $"¿Está seguro que quieres borrar la categoría: {category.Name}?",
                 Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
             });
 
             var confirm = string.IsNullOrEmpty(result.Value);

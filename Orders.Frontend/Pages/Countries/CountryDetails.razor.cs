@@ -1,45 +1,52 @@
-﻿using CurrieTechnologies.Razor.SweetAlert2;
+﻿using System.Net;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
-using System.Net;
 
 namespace Orders.Frontend.Pages.Countries
 {
-    public partial class CountriesIndex
+    public partial class CountryDetails
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
-        private List<Country>? Countries;
+        private Country? country;
 
-        //-----------------------------------------------------------------------------------
-        protected async override Task OnInitializedAsync()
+        [Parameter]
+        public int CountryId { get; set; }
+
+        protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
 
-        //-----------------------------------------------------------------------------------
         private async Task LoadAsync()
         {
-            var responseHppt = await Repository.GetAsync<List<Country>>("api/countries");
-            if (responseHppt.Error)
+            var responseHttp = await Repository.GetAsync<Country>($"/api/countries/{CountryId}");
+            if (responseHttp.Error)
             {
-                var message = await responseHppt.GetErrorMessageAsync();
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/countries");
+                    return;
+                }
+
+                var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-            Countries = responseHppt.Response!;
+
+            country = responseHttp.Response;
         }
 
-        //-----------------------------------------------------------------------------------
-        private async Task DeleteAsync(Country country)
+        private async Task DeleteAsync(State state)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Está seguro que quieres borrar el país: {country.Name}?",
+                Text = $"¿Realmente deseas eliminar el departamento/estado? {state.Name}",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
                 CancelButtonText = "No",
@@ -47,35 +54,29 @@ namespace Orders.Frontend.Pages.Countries
             });
 
             var confirm = string.IsNullOrEmpty(result.Value);
-
             if (confirm)
             {
                 return;
             }
 
-            var responseHttp = await Repository.DeleteAsync($"api/countries/{country.Id}");
+            var responseHttp = await Repository.DeleteAsync($"/api/states/{state.Id}");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/");
+                    var message = await responseHttp.GetErrorMessageAsync();
+                    await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                    return;
                 }
-                else
-                {
-                    var mensajeError = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
-                }
-                return;
             }
-            
+
             await LoadAsync();
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
-                Position = SweetAlertPosition.Center,
+                Position = SweetAlertPosition.BottomEnd,
                 ShowConfirmButton = true,
-                Timer = 3000,
-                Background = "LightSkyBlue",
+                Timer = 3000
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
         }
