@@ -1,0 +1,67 @@
+﻿@page "/cities/edit/{CityId:int}"
+@using System.Net
+@inject IRepository repository
+
+<h3>Editar Ciudad</h3>
+
+@if (city is null)
+{
+    <Loading />
+}
+else
+{
+    <CityForm @ref="cityForm" City="city" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+}
+
+@code{
+    private City? city;
+    private CityForm? cityForm;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int CityId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var responseHttp = await Repository.GetAsync<City>($"/api/cities/{CityId}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                Return();
+            }
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        city = responseHttp.Response;
+    }
+
+    private async Task SaveAsync()
+    {
+        var response = await Repository.PutAsync($"/api/cities", city);
+        if (response.Error)
+        {
+            var message = await response.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
+    }
+
+    private void Return()
+    {
+        cityForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo($"/states/details/{city!.StateId}");
+    }
+
+}
