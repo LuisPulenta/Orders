@@ -2,11 +2,14 @@
 
 @inject SweetAlertService sweetAlertService
 
+@attribute [Authorize(Roles = "Admin")]
+
 <h3>Nueva Ciudad</h3>
 
 <CityForm @ref="cityForm" City="city" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code{
+
     private City city = new();
     private CityForm? cityForm;
 

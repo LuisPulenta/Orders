@@ -1,6 +1,7 @@
 ﻿@page "/cities/edit/{CityId:int}"
 @using System.Net
 @inject IRepository repository
+@attribute [Authorize(Roles = "Admin")]
 
 <h3>Editar Ciudad</h3>
 
@@ -14,6 +15,7 @@ else
 }
 
 @code{
+    
     private City? city;
     private CityForm? cityForm;
 
