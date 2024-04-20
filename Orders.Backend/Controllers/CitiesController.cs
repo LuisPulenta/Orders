@@ -20,6 +20,7 @@ namespace Orders.Backend.Controllers
             _citiesUnitOfWork = citiesUnitOfWork;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
@@ -31,6 +32,7 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
@@ -42,5 +44,12 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //--------------------------------------------------------------------------------------------------------
+        [AllowAnonymous]
+        [HttpGet("combo/{stateId:int}")]
+        public async Task<IActionResult> GetComboAsync(int stateId)
+        {
+            return Ok(await _citiesUnitOfWork.GetComboAsync(stateId));
+        }
     }
 }

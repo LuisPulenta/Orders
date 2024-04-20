@@ -19,6 +19,7 @@ namespace Orders.Backend.Controllers
             _statesUnitOfWork = statesUnitOfWork;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet("full")]
         public override async Task<IActionResult> GetAsync()
         {
@@ -30,6 +31,7 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
@@ -41,6 +43,7 @@ namespace Orders.Backend.Controllers
             return NotFound(response.Message);
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
@@ -52,6 +55,7 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //--------------------------------------------------------------------------------------------------------
         [HttpGet("totalPages")]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
@@ -62,6 +66,15 @@ namespace Orders.Backend.Controllers
             }
             return BadRequest();
         }
+
+        //--------------------------------------------------------------------------------------------------------
+        [AllowAnonymous]
+        [HttpGet("combo/{countryId:int}")]
+        public async Task<IActionResult> GetComboAsync(int countryId)
+        {
+            return Ok(await _statesUnitOfWork.GetComboAsync(countryId));
+        }
+
 
     }
 }
