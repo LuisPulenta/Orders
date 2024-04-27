@@ -20,5 +20,12 @@ namespace Orders.Backend.Repositories.Interfaces
 
         Task LogoutAsync();
 
+        Task<User> GetUserAsync(Guid userId);
+
+        Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword);
+
+        Task<IdentityResult> UpdateUserAsync(User user);
+
+
     }
 }
