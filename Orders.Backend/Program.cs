@@ -11,6 +11,7 @@ using Orders.Backend.UnitsOfWork;
 using Orders.Backend.UnitsOfWork.Implementations;
 using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.Entities;
+using Orders.Shared.Helpers;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -74,6 +75,8 @@ builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+
+builder.Services.AddScoped<IFilesHelper, FilesHelper>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {

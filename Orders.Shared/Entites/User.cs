@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Orders.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Orders.Shared.Entities
 {

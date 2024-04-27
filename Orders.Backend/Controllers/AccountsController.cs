@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
+using Orders.Shared.Helpers;
 
 namespace Orders.Backend.Controllers
 {
@@ -15,11 +16,13 @@ namespace Orders.Backend.Controllers
     {
         private readonly IUsersUnitOfWork _usersUnitOfWork;
         private readonly IConfiguration _configuration;
+        private readonly IFilesHelper _filesHelper;
 
-        public AccountsController(IUsersUnitOfWork usersUnitOfWork, IConfiguration configuration)
+        public AccountsController(IUsersUnitOfWork usersUnitOfWork, IConfiguration configuration, IFilesHelper filesHelper)
         {
             _usersUnitOfWork = usersUnitOfWork;
             _configuration = configuration;
+            _filesHelper = filesHelper;
         }
 
         //-------------------------------------------------------------------------------------------------
@@ -27,6 +30,33 @@ namespace Orders.Backend.Controllers
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
             User user = model;
+
+            //Foto
+
+            if (model.Photo != null)
+            {
+                byte[] imageArray = Convert.FromBase64String(model.Photo!);
+                var stream = new MemoryStream(imageArray);
+                var guid = Guid.NewGuid().ToString();
+                var file = $"{guid}.jpg";
+                var folder = "wwwroot\\images\\users";
+                var fullPath = $"~/images/users/{file}";
+                var response = _filesHelper.UploadPhoto(stream, folder, file);
+
+                if (response)
+                {
+                    user.Photo = fullPath;
+                }
+                else
+                {
+                    user.Photo = string.Empty;
+                }
+            }
+            else
+            {
+                user.Photo = string.Empty;
+            }
+
             var result = await _usersUnitOfWork.AddUserAsync(user, model.Password);
             if (result.Succeeded)
             {
