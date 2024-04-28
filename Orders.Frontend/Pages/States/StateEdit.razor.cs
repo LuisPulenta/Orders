@@ -47,7 +47,7 @@ namespace Orders.Frontend.Pages.States
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
+                Position = SweetAlertPosition.Center,
                 ShowConfirmButton = true,
                 Timer = 3000
             });

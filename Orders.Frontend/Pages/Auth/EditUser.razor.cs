@@ -20,6 +20,7 @@ namespace Orders.Frontend.Pages.Auth
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private ILoginService LoginService { get; set; } = null!;
 
+        //--------------------------------------------------------------------------------------------------------
         protected override async Task OnInitializedAsync()
         {
             await LoadUserAsyc();
@@ -29,11 +30,12 @@ namespace Orders.Frontend.Pages.Auth
 
             if (!string.IsNullOrEmpty(user!.Photo))
             {
-                imageUrl = user.Photo;
+                imageUrl = "https://localhost:7225" + user.Photo.Substring(1);
                 user.Photo = null;
             }
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task LoadUserAsyc()
         {
             var responseHttp = await Repository.GetAsync<User>($"/api/accounts");
@@ -51,12 +53,14 @@ namespace Orders.Frontend.Pages.Auth
             user = responseHttp.Response;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private void ImageSelected(string imagenBase64)
         {
             user!.Photo = imagenBase64;
             imageUrl = null;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task CountryChangedAsync(ChangeEventArgs e)
         {
             var selectedCountry = Convert.ToInt32(e.Value!);
@@ -66,6 +70,7 @@ namespace Orders.Frontend.Pages.Auth
             await LoadStatesAsyn(selectedCountry);
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task StateChangedAsync(ChangeEventArgs e)
         {
             var selectedState = Convert.ToInt32(e.Value!);
@@ -74,6 +79,7 @@ namespace Orders.Frontend.Pages.Auth
             await LoadCitiesAsyn(selectedState);
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task LoadCountriesAsync()
         {
             var responseHttp = await Repository.GetAsync<List<Country>>("/api/countries/combo");
@@ -86,6 +92,7 @@ namespace Orders.Frontend.Pages.Auth
             countries = responseHttp.Response;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task LoadStatesAsyn(int countryId)
         {
             var responseHttp = await Repository.GetAsync<List<State>>($"/api/states/combo/{countryId}");
@@ -98,6 +105,7 @@ namespace Orders.Frontend.Pages.Auth
             states = responseHttp.Response;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task LoadCitiesAsyn(int stateId)
         {
             var responseHttp = await Repository.GetAsync<List<City>>($"/api/cities/combo/{stateId}");
@@ -111,6 +119,7 @@ namespace Orders.Frontend.Pages.Auth
             cities = responseHttp.Response;
         }
 
+        //--------------------------------------------------------------------------------------------------------
         private async Task SaveUserAsync()
         {
             var responseHttp = await Repository.PutAsync<User>("/api/accounts", user!);

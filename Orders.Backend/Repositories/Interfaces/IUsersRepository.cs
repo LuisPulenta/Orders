@@ -25,7 +25,5 @@ namespace Orders.Backend.Repositories.Interfaces
         Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword);
 
         Task<IdentityResult> UpdateUserAsync(User user);
-
-
     }
 }
