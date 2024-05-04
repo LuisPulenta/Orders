@@ -305,7 +305,7 @@ namespace Orders.Backend.Controllers
             var response = _mailHelper.SendMail(user.FullName, user.Email!,
                 $"Orders - Recuperación de contraseña",
                 $"<h1>Orders - Recuperación de contraseña</h1>" +
-                $"<p>Para recuperar su contraseña, por favor hacer clic 'Recuperar Contraseña':</p>" +
+                $"<p>Para recuperar su contraseña, por favor hacer clic en 'Recuperar Contraseña':</p>" +
                 $"<b><a href ={tokenLink}>Recuperar Contraseña</a></b>");
 
             if (response.WasSuccess)
