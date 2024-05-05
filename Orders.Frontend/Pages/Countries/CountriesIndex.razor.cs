@@ -19,8 +19,19 @@ namespace Orders.Frontend.Pages.Countries
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
 
         private List<Country>? Countries;
+
+
+        //-----------------------------------------------------------------------------------
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
 
         //-----------------------------------------------------------------------------------
         private async Task SelectedPageAsync(int page)
@@ -47,7 +58,9 @@ namespace Orders.Frontend.Pages.Countries
         //-----------------------------------------------------------------------------------
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/countries?page={page}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/countries?page={page}&recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -63,14 +76,26 @@ namespace Orders.Frontend.Pages.Countries
             Countries = responseHttp.Response;
             return true;
         }
+        
+        //-----------------------------------------------------------------------------------
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
 
         //-----------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {
-            var url = "api/countries/totalPages";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/countries/totalPages?recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);

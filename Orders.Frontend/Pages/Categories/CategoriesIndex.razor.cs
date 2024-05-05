@@ -19,8 +19,18 @@ namespace Orders.Frontend.Pages.Categories
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
 
         private List<Category>? Categories;
+
+        //-----------------------------------------------------------------------------------
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
 
         //-----------------------------------------------------------------------------------
         private async Task SelectedPageAsync(int page)
@@ -47,7 +57,9 @@ namespace Orders.Frontend.Pages.Categories
         //-----------------------------------------------------------------------------------
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/categories/?page={page}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/categories?page={page}&recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -65,9 +77,20 @@ namespace Orders.Frontend.Pages.Categories
         }
 
         //-----------------------------------------------------------------------------------
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {
-            var url = $"api/categories/totalPages";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/categories/totalPages?recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"?filter={Filter}";

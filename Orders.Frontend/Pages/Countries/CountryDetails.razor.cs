@@ -16,6 +16,7 @@ namespace Orders.Frontend.Pages.Countries
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
 
         private Country? country;
         private List<State>? states;
@@ -25,6 +26,16 @@ namespace Orders.Frontend.Pages.Countries
         [Parameter]
         public int CountryId { get; set; }
 
+        //-------------------------------------------------------------------------------------------
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
+        {
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
+        //-------------------------------------------------------------------------------------------
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
@@ -59,7 +70,9 @@ namespace Orders.Frontend.Pages.Countries
         //-------------------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {
-            var url = $"api/states/totalPages?id={CountryId}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/states/totalPages?id={CountryId}&recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -78,7 +91,10 @@ namespace Orders.Frontend.Pages.Countries
         //-------------------------------------------------------------------------------------------
         private async Task<bool> LoadStatesAsync(int page)
         {
-            var url = $"api/states?id={CountryId}&page={page}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/states?id={CountryId}&page={page}&recordsnumber={RecordsNumber}";
+
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -93,6 +109,15 @@ namespace Orders.Frontend.Pages.Countries
             }
             states = responseHttp.Response;
             return true;
+        }
+
+        //-------------------------------------------------------------------------------------------
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
         }
 
         //-------------------------------------------------------------------------------------------
