@@ -1,39 +1,42 @@
 ﻿@page "/Login"
 
-<div class="row mt-5">
-    <div class="col-md-4  offset-md-4">
+<div class="row">
+    <div class="col-12">
 
-<EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
-    <DataAnnotationsValidator />
+        <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
+            <DataAnnotationsValidator />
             <div class="card bg-light">
                 <div class="card-header justify-content-center">
                     <span>
                         Iniciar Sesión
-                        <button class="btn btn-sm btn-primary float-end" type="submit"><i class="bi bi-box-arrow-in-right" /> Iniciar Sesión</button>
+                        <button class="btn btn-sm btn-primary float-end" @onclick=@(() => LoginAsync())><i class="bi bi-person-add" /> Iniciar Sesión</button>
+                        <button class="btn btn-sm mx-1 btn-danger float-end" @onclick=@(() => CloseModalAsync())><i class="bi bi-x-circle" /> Cancelar</button>
+
                     </span>
                 </div>
                 <div class="card-body">
 
-            <div class="mb-3">
-                <label>Email:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@loginDTO.Email" />
-                    <ValidationMessage For="@(() => loginDTO.Email)" />
+                    <div class="mb-3">
+                        <label>Email:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@loginDTO.Email" />
+                            <ValidationMessage For="@(() => loginDTO.Email)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Contraseña:</label>
+                        <div>
+                            <InputText type="password" class="form-control" @bind-Value="@loginDTO.Password" />
+                            <ValidationMessage For="@(() => loginDTO.Password)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <p><a class="btn btn-link" href="/Register">¿No eres usuario aún? Resgitrate aquí</a></p>
+                    <p><a class="btn btn-link" href="/ResendToken">Reenviar correo de activación de cuenta</a></p>
+                    <p><a class="btn btn-link" href="/RecoverPassword">¿Has olvidado tu contraseña?</a></p>
                 </div>
             </div>
-            <div class="mb-3">
-                <label>Contraseña:</label>
-                <div>
-                    <InputText type="password" class="form-control" @bind-Value="@loginDTO.Password" />
-                    <ValidationMessage For="@(() => loginDTO.Password)" />
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <p><a class="btn btn-link" href="/ResendToken">Reenviar correo de activación de cuenta</a></p>
-            <p><a class="btn btn-link" href="/RecoverPassword">¿Has olvidado tu contraseña?</a></p>
-        </div>
-    </div>
-</EditForm>
+        </EditForm>
     </div>
 </div>

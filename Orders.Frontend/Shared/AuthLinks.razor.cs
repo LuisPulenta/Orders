@@ -1,5 +1,7 @@
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Orders.Frontend.Pages.Auth;
 
 namespace Orders.Frontend.Shared
 {
@@ -7,10 +9,11 @@ namespace Orders.Frontend.Shared
     {
         private string photoUser="";
         
-        [CascadingParameter]
-
         private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
+        [CascadingParameter] IModalService Modal { get; set; } = default!;
+
+        //----------------------------------------------------------------------------------------
         protected override async Task OnParametersSetAsync()
         {
             var authenticationState = await AuthenticationStateTask;
@@ -27,5 +30,12 @@ namespace Orders.Frontend.Shared
                 }
             }            
         }
+
+        //----------------------------------------------------------------------------------------
+        private void ShowModal()
+        {
+            Modal.Show<Login>();
+        }
+
     }
 }

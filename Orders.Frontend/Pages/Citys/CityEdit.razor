@@ -23,6 +23,7 @@ else
     [Inject] private IRepository Repository { get; set; } = null!;
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
     [Parameter] public int CityId { get; set; }
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -49,6 +50,7 @@ else
             await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
+        await BlazoredModal.CloseAsync(ModalResult.Ok());
         Return();
         var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
