@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace Orders.Shared.Entities
+namespace Orders.Shared.DTOs
 {
-    public class Product
+    public class ProductDTO
     {
         public int Id { get; set; }
 
@@ -30,22 +29,8 @@ namespace Orders.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float Stock { get; set; }
 
-        public ICollection<ProductCategory>? ProductCategories { get; set; }
+        public List<int>? ProductCategoryIds { get; set; }
 
-        [Display(Name = "Categorías")]
-        public int ProductCategoriesNumber => ProductCategories == null || ProductCategories.Count == 0 ? 0 : ProductCategories.Count;
-
-        public ICollection<ProductImage>? ProductImages { get; set; }
-
-        [Display(Name = "Imágenes")]
-        public int ProductImagesNumber => ProductImages == null || ProductImages.Count == 0 ? 0 : ProductImages.Count;
-
-        [Display(Name = "Imagén")]
-        public string MainImage => ProductImages == null || ProductImages.Count == 0 ? string.Empty : ProductImages.FirstOrDefault()!.Image;
-
-        public string ImageFullPath => string.IsNullOrEmpty(ProductImages.FirstOrDefault()!.Image)
-    ? $"https://localhost:7225/images/products/noimage.png"
-    : $"https://localhost:7225{ProductImages.FirstOrDefault()!.Image[1..]}";
-
+        public List<string>? ProductImages { get; set; }
     }
 }
