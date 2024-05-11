@@ -7,10 +7,9 @@ namespace Orders.Frontend.Shared
 {
     public partial class AuthLinks
     {
-        private string photoUser="";
+        private string? photoUser="";
         
-        private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-
+        [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
         [CascadingParameter] IModalService Modal { get; set; } = default!;
 
         //----------------------------------------------------------------------------------------
