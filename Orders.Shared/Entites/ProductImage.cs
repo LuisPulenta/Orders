@@ -12,5 +12,9 @@ namespace Orders.Shared.Entities
 
         [Display(Name = "Imagen")]
         public string Image { get; set; } = null!;
+
+        public string ImageFullPath => string.IsNullOrEmpty(Image)
+       ? $"https://localhost:7225/images/products/noimage.png"
+       : $"https://localhost:7225{Image[1..]}";
     }
 }
