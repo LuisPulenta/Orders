@@ -26,17 +26,20 @@ namespace Orders.Frontend.Pages.Products
         [SupplyParameterFromQuery]
         public string Filter { get; set; } = string.Empty;
 
+        //-----------------------------------------------------------------------------------------------------------
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task SelectedPageAsync(int page)
         {
             currentPage = page;
             await LoadAsync(page);
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task LoadAsync(int page = 1)
         {
             if (!string.IsNullOrWhiteSpace(Page))
@@ -51,6 +54,7 @@ namespace Orders.Frontend.Pages.Products
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task<bool> LoadListAsync(int page)
         {
             var url = $"api/products?page={page}";
@@ -70,6 +74,7 @@ namespace Orders.Frontend.Pages.Products
             return true;
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {
             var url = string.Empty;
@@ -92,6 +97,7 @@ namespace Orders.Frontend.Pages.Products
             totalPages = response.Response;
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task Delete(int productId)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
@@ -124,14 +130,25 @@ namespace Orders.Frontend.Pages.Products
             }
 
             await LoadAsync(1);
+            var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.Center,
+                ShowConfirmButton = true,
+                Timer = 3000,
+                Background = "LightSkyBlue",
+            });
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task CleanFilterAsync()
         {
             Filter = string.Empty;
             await ApplyFilterAsync();
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         private async Task ApplyFilterAsync()
         {
             int page = 1;
