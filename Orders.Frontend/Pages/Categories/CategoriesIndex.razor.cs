@@ -97,7 +97,7 @@ namespace Orders.Frontend.Pages.Categories
 
             if (!string.IsNullOrEmpty(Filter))
             {
-                url += $"?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var responseHttp = await Repository.GetAsync<int>(url);

@@ -1,7 +1,5 @@
 ﻿@page "/categories"
 
-<h3>Categorías</h3>
-
 <div class="card">
     <div class="card-header">
         <span>
@@ -11,41 +9,41 @@
     </div>
     <div class="card-body">
         
-                <Filter PlaceHolder="Buscar categoría..." Callback=@FilterCallBack />
+        <Filter PlaceHolder="Buscar categoría..." Callback=@FilterCallBack />
 
-<Pagination CurrentPage="currentPage"
-            TotalPages="totalPages"
-            SelectedPage="SelectedPageAsync"
-            RecordsNumber="SelectedRecordsNumberAsync" />
+        <Pagination CurrentPage="currentPage"
+                    TotalPages="totalPages"
+                    SelectedPage="SelectedPageAsync"
+                    RecordsNumber="SelectedRecordsNumberAsync" />
 
-<GenericList MyList="Categories">
-    <Body>
+        <GenericList MyList="Categories">
+            <Body>
      
 
-        <table class="table table-sm table-striped">
-            <thead>
-                <tr>
-                    <th>Categorías</th>
-                    <th style="width:168px"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var category in Categories!)
-                {
-                    <tr>
-                        <td>@category.Name</td>
-                        <td>
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Categorías</th>
+                            <th style="width:168px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Categories!)
+                        {
+                            <tr>
+                                <td>@category.Name</td>
+                                <td>
 
-                                    <a @onclick=@(() => ShowModalAsync(category.Id, true)) class="btn btn-warning"><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(category))><i class="bi bi-trash" /> Borrar</button>
-                        </td>
-                    </tr>
-                }
+                                            <a @onclick=@(() => ShowModalAsync(category.Id, true)) class="btn btn-warning"><i class="bi bi-pencil" /> Editar</a>
+                                            <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(category))><i class="bi bi-trash" /> Borrar</button>
+                                </td>
+                            </tr>
+                        }
 
-            </tbody>
-        </table>
-    </Body>
-</GenericList>
+                    </tbody>
+                </table>
+            </Body>
+        </GenericList>
     </div>
 </div>
 

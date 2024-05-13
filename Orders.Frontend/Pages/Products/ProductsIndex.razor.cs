@@ -18,18 +18,17 @@ namespace Orders.Frontend.Pages.Products
 
         public List<Product>? Products { get; set; }
 
-        [Parameter]
-        [SupplyParameterFromQuery]
-        public string Page { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
 
-        [Parameter]
-        [SupplyParameterFromQuery]
-        public string Filter { get; set; } = string.Empty;
-
-        //-----------------------------------------------------------------------------------------------------------
-        protected override async Task OnInitializedAsync()
+        //-----------------------------------------------------------------------------------
+        private async Task SelectedRecordsNumberAsync(int recordsnumber)
         {
-            await LoadAsync();
+            RecordsNumber = recordsnumber;
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
         }
 
         //-----------------------------------------------------------------------------------------------------------
@@ -57,7 +56,9 @@ namespace Orders.Frontend.Pages.Products
         //-----------------------------------------------------------------------------------------------------------
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/products?page={page}";
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/products?page={page}&recordsnumber={RecordsNumber}";
+
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
@@ -74,17 +75,24 @@ namespace Orders.Frontend.Pages.Products
             return true;
         }
 
+        //-----------------------------------------------------------------------------------
+        private void ValidateRecordsNumber(int recordsnumber)
+        {
+            if (recordsnumber == 0)
+            {
+                RecordsNumber = 10;
+            }
+        }
+
         //-----------------------------------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {
-            var url = string.Empty;
-            if (string.IsNullOrEmpty(Filter))
+            ValidateRecordsNumber(RecordsNumber);
+            var url = $"api/products/totalPages?recordsnumber={RecordsNumber}";
+
+            if (!string.IsNullOrEmpty(Filter))
             {
-                url = $"api/products/totalPages";
-            }
-            else
-            {
-                url = $"api/products/totalPages?filter={Filter}";
+                url += $"&filter={Filter}";
             }
 
             var response = await Repository.GetAsync<int>(url);
@@ -95,6 +103,12 @@ namespace Orders.Frontend.Pages.Products
                 return;
             }
             totalPages = response.Response;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadAsync();
         }
 
         //-----------------------------------------------------------------------------------------------------------
@@ -140,20 +154,20 @@ namespace Orders.Frontend.Pages.Products
             });
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
         }
-
-        //-----------------------------------------------------------------------------------------------------------
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await ApplyFilterAsync();
-        }
-
+               
         //-----------------------------------------------------------------------------------------------------------
         private async Task ApplyFilterAsync()
         {
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
+        }
+        //-----------------------------------------------------------------------------------
+        private async Task FilterCallBack(string filter)
+        {
+            Filter = filter;
+            await ApplyFilterAsync();
+            StateHasChanged();
         }
     }
 }

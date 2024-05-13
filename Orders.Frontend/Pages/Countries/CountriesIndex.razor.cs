@@ -90,7 +90,6 @@ namespace Orders.Frontend.Pages.Countries
             }
         }
 
-
         //-----------------------------------------------------------------------------------
         private async Task LoadPagesAsync()
         {

@@ -40,10 +40,8 @@ namespace Orders.Shared.Entities
         [Display(Name = "Imágenes")]
         public int ProductImagesNumber => ProductImages == null || ProductImages.Count == 0 ? 0 : ProductImages.Count;
 
-        [Display(Name = "Imagén")]
-        public string MainImage => ProductImages == null || ProductImages.Count == 0 ? string.Empty : ProductImages.FirstOrDefault()!.Image;
-
-        public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
+        [Display(Name = "Imagen")]
+        public string MainImage => ProductImages == null || ProductImages.Count == 0
     ? $"https://localhost:7225/images/products/noimage.png"
     : $"https://localhost:7225{ProductImages.FirstOrDefault()!.Image[1..]}";
 

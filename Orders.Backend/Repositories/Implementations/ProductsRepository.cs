@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Orders.Backend.Data;
 using Orders.Backend.Helpers;
+using Orders.Backend.Migrations;
 using Orders.Backend.Repositories.Interfaces;
 using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
@@ -102,11 +103,21 @@ namespace Orders.Backend.Repositories.Implementations
                     ProductImages = new List<ProductImage>()
                 };
 
-                //foreach (var productImage in productDTO.ProductImages!)
-                //{
-                //    var photoProduct = Convert.FromBase64String(productImage);
-                //    newProduct.ProductImages.Add(new ProductImage { Image = await _filesHelper.UploadPhoto.SaveFileAsync(photoProduct, ".jpg", "products") });
-                //}
+                foreach (var productImage in productDTO.ProductImages!)
+                {
+                    byte[] imageArray = Convert.FromBase64String(productImage);
+                    var stream = new MemoryStream(imageArray);
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+                    var folder = "wwwroot\\images\\products";
+                    var fullPath = $"~/images/products/{file}";
+                    var response = _filesHelper.UploadPhoto(stream, folder, file);
+
+                    if (response)
+                    {
+                        newProduct.ProductImages.Add(new ProductImage { Image = fullPath });
+                    }
+                }
 
                 foreach (var productCategoryId in productDTO.ProductCategoryIds!)
                 {
