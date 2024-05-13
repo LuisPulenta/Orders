@@ -148,6 +148,7 @@ namespace Orders.Frontend.Pages.Products
                 ShowConfirmButton = true,
                 Timer = 3000
             });
+            await LoadProductAsync();
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Imagenes agregadas con éxito.");
         }
 
@@ -181,6 +182,7 @@ namespace Orders.Frontend.Pages.Products
                 ShowConfirmButton = true,
                 Timer = 3000
             });
+            await LoadProductAsync();
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Imagén eliminada con éxito.");
         }
     }

@@ -234,9 +234,18 @@ namespace Orders.Backend.Repositories.Implementations
             {
                 if (!imageDTO.Images[i].StartsWith("https://"))
                 {
-                    var photoProduct = Convert.FromBase64String(imageDTO.Images[i]);
-                    //imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoProduct, ".jpg", "products");
-                    product.ProductImages!.Add(new ProductImage { Image = imageDTO.Images[i] });
+                    byte[] imageArray = Convert.FromBase64String(imageDTO.Images[i]);
+                    var stream = new MemoryStream(imageArray);
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+                    var folder = "wwwroot\\images\\products";
+                    var fullPath = $"~/images/products/{file}";
+                    var response = _filesHelper.UploadPhoto(stream, folder, file);
+
+                    if (response)
+                    {
+                        product.ProductImages!.Add(new ProductImage { Image = fullPath });
+                    }
                 }
             }
 
