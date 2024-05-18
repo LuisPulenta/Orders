@@ -23,6 +23,7 @@ namespace Orders.Shared.Entities
         [Display(Name = "Comentarios")]
         public string? Remarks { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:C2}")]
         public decimal Value => Product == null ? 0 : Product.Price * (decimal)Quantity;
     }
 }
