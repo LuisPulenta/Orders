@@ -21,6 +21,7 @@ namespace Orders.Backend.Controllers
 
         //--------------------------------------------------------------------------------------------------
         [HttpGet]
+        [AllowAnonymous]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
             var response = await _productsUnitOfWork.GetAsync(pagination);
@@ -33,6 +34,7 @@ namespace Orders.Backend.Controllers
 
         //--------------------------------------------------------------------------------------------------
         [HttpGet("totalPages")]
+        [AllowAnonymous]
         public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
             var action = await _productsUnitOfWork.GetTotalPagesAsync(pagination);
@@ -45,6 +47,7 @@ namespace Orders.Backend.Controllers
 
         //--------------------------------------------------------------------------------------------------
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public override async Task<IActionResult> GetAsync(int id)
         {
             var action = await _productsUnitOfWork.GetAsync(id);

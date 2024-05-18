@@ -40,6 +40,8 @@ namespace Orders.Shared.Entities
         [Display(Name = "Imágenes")]
         public int ProductImagesNumber => ProductImages == null || ProductImages.Count == 0 ? 0 : ProductImages.Count;
 
+        public ICollection<TemporalOrder>? TemporalOrders { get; set; }
+
         [Display(Name = "Imagen")]
         public string MainImage => ProductImages == null || ProductImages.Count == 0
     ? $"https://localhost:7225/images/products/noimage.png"

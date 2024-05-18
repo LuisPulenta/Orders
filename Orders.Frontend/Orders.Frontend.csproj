@@ -77,6 +77,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\Home.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\images\products\adidas_barracuda.png" />
     <None Include="wwwroot\images\products\Adidas_superstar.png" />
     <None Include="wwwroot\images\products\Aguacate1.png" />
