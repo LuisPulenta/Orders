@@ -12,12 +12,14 @@ namespace Orders.Backend.Repositories.Implementations
         private readonly DataContext _context;
         private readonly IUsersRepository _usersRepository;
 
+        //-----------------------------------------------------------------------------------------------------------
         public TemporalOrdersRepository(DataContext context, IUsersRepository usersRepository) : base(context)
         {
             _context = context;
             _usersRepository = usersRepository;
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<TemporalOrderDTO>> AddFullAsync(string email, TemporalOrderDTO temporalOrderDTO)
         {
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == temporalOrderDTO.ProductId);
@@ -68,6 +70,7 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<IEnumerable<TemporalOrder>>> GetAsync(string email)
         {
             var temporalOrders = await _context.TemporalOrders
@@ -87,6 +90,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //-----------------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<int>> GetCountAsync(string email)
         {
             var count = await _context.TemporalOrders
@@ -99,5 +103,59 @@ namespace Orders.Backend.Repositories.Implementations
                 Result = (int)count
             };
         }
+
+        //-----------------------------------------------------------------------------------------------------------
+        public async Task<ActionResponse<TemporalOrder>> PutFullAsync(TemporalOrderDTO temporalOrderDTO)
+        {
+            var currentTemporalOrder = await _context.TemporalOrders.FirstOrDefaultAsync(x => x.Id == temporalOrderDTO.Id);
+            if (currentTemporalOrder == null)
+            {
+                return new ActionResponse<TemporalOrder>
+                {
+                    WasSuccess = false,
+                    Message = "Registro no encontrado"
+                };
+            }
+
+            currentTemporalOrder!.Remarks = temporalOrderDTO.Remarks;
+            currentTemporalOrder.Quantity = temporalOrderDTO.Quantity;
+
+            _context.Update(currentTemporalOrder);
+            await _context.SaveChangesAsync();
+            return new ActionResponse<TemporalOrder>
+            {
+                WasSuccess = true,
+                Result = currentTemporalOrder
+            };
+        }
+
+        //-----------------------------------------------------------------------------------------------------------
+        public override async Task<ActionResponse<TemporalOrder>> GetAsync(int id)
+        {
+            var temporalOrder = await _context.TemporalOrders
+                .Include(ts => ts.User!)
+                .Include(ts => ts.Product!)
+                .ThenInclude(p => p.ProductCategories!)
+                .ThenInclude(pc => pc.Category)
+                .Include(ts => ts.Product!)
+                .ThenInclude(p => p.ProductImages)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (temporalOrder == null)
+            {
+                return new ActionResponse<TemporalOrder>
+                {
+                    WasSuccess = false,
+                    Message = "Registro no encontrado"
+                };
+            }
+
+            return new ActionResponse<TemporalOrder>
+            {
+                WasSuccess = true,
+                Result = temporalOrder
+            };
+        }
+
     }
 }

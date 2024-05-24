@@ -14,11 +14,13 @@ namespace Orders.Backend.Controllers
     {
         private readonly ITemporalOrdersUnitOfWork _temporalOrdersUnitOfWork;
 
+        //-----------------------------------------------------------------------------------------------------
         public TemporalOrdersController(IGenericUnitOfWork<TemporalOrder> unitOfWork, ITemporalOrdersUnitOfWork temporalOrdersUnitOfWork) : base(unitOfWork)
         {
             _temporalOrdersUnitOfWork = temporalOrdersUnitOfWork;
         }
 
+        //-----------------------------------------------------------------------------------------------------
         [HttpPost("full")]
         public async Task<IActionResult> PostAsync(TemporalOrderDTO temporalOrderDTO)
         {
@@ -30,6 +32,7 @@ namespace Orders.Backend.Controllers
             return BadRequest(action.Message);
         }
 
+        //-----------------------------------------------------------------------------------------------------
         [HttpGet("my")]
         public override async Task<IActionResult> GetAsync()
         {
@@ -41,6 +44,7 @@ namespace Orders.Backend.Controllers
             return BadRequest(action.Message);
         }
 
+        //-----------------------------------------------------------------------------------------------------
         [HttpGet("count")]
         public async Task<IActionResult> GetCountAsync()
         {
@@ -51,5 +55,30 @@ namespace Orders.Backend.Controllers
             }
             return BadRequest(action.Message);
         }
+
+        //-----------------------------------------------------------------------------------------------------
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _temporalOrdersUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound(response.Message);
+        }
+
+        //-----------------------------------------------------------------------------------------------------
+        [HttpPut("full")]
+        public async Task<IActionResult> PutFullAsync(TemporalOrderDTO temporalOrderDTO)
+        {
+            var action = await _temporalOrdersUnitOfWork.PutFullAsync(temporalOrderDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return NotFound(action.Message);
+        }
+
     }
 }
