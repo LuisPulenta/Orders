@@ -45,5 +45,9 @@ namespace Orders.Shared.Entities
         public ICollection<TemporalOrder>? TemporalOrders { get; set; }
 
         public ICollection<Order>? Orders { get; set; }
+
+        public string PhotoFullPath => string.IsNullOrEmpty(Photo)
+       ? $"https://localhost:7225/images/products/noimage.png"
+       : $"https://localhost:7225{Photo[1..]}";
     }
 }

@@ -38,7 +38,7 @@ else
                             {
                                 <tr>
                                     <td>
-                                        @($"{sale.Date:yyyy/MM/dd hh:mm tt}")
+                                        @($"{sale.Date.ToLocalTime():yyyy/MM/dd hh:mm tt}")
                                     </td>
                                     <td>
                                         @sale.User!.FullName

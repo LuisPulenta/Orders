@@ -16,6 +16,9 @@ namespace Orders.Frontend.Pages.Auth
         private List<City>? cities;
         private bool loading;
         private string? imageUrl;
+        private string titulo;
+
+        [Parameter, SupplyParameterFromQuery] public bool IsAdmin { get; set; }
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
@@ -26,6 +29,14 @@ namespace Orders.Frontend.Pages.Auth
         protected override async Task OnInitializedAsync()
         {
             await LoadCountriesAsync();
+            if (IsAdmin)
+            {
+                titulo = "Registrar Nuevo Administador";
+            }
+            else
+            {
+                titulo = "Registrar Nuevo Usuario";
+            }
         }
 
         //---------------------------------------------------------------------------------------------------
@@ -101,6 +112,12 @@ namespace Orders.Frontend.Pages.Auth
         {
             userDTO.UserName = userDTO.Email;
             userDTO.UserType = UserType.User;
+
+            if (IsAdmin)
+            {
+                userDTO.UserType = UserType.Admin;
+            }
+
             loading = true;
             var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", userDTO);
             loading = false;
