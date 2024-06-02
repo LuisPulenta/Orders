@@ -4,16 +4,16 @@ namespace Orders.Frontend.Repositories
 {
     public class HttpResponseWrapper<T>
     {
+        public T? Response { get; }
+        public bool Error { get; }
+        public HttpResponseMessage HttpResponseMessage { get; }
+
         public HttpResponseWrapper(T? response, bool error, HttpResponseMessage httpResponseMessage)
         {
             Response = response;
             Error = error;
             HttpResponseMessage = httpResponseMessage;
         }
-
-        public T? Response { get;}
-        public bool Error { get;}
-        public HttpResponseMessage HttpResponseMessage { get;}
 
         public async Task<string?> GetErrorMessageAsync()
         {

@@ -14,14 +14,15 @@ namespace Orders.Frontend.Pages.States
         [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
         [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        public bool FormPostedSuccessfully { get; set; } = false;
 
+        //-------------------------------------------------------------------------------------
         protected override void OnInitialized()
         {
             editContext = new(State);
         }
 
-        public bool FormPostedSuccessfully { get; set; } = false;
-
+        //-------------------------------------------------------------------------------------
         private async Task OnBeforeInternalNavigation(LocationChangingContext context)
         {
             var formWasEdited = editContext.IsModified();

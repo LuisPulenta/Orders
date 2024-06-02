@@ -22,6 +22,7 @@ namespace Orders.Frontend.Pages.Countries
 
         private Country country = new();
 
+        //----------------------------------------------------------------------------------------
         private async Task CreateAsync()
         {
             var responseHttp = await Repository.PostAsync("/api/countries", country);
@@ -44,6 +45,7 @@ namespace Orders.Frontend.Pages.Countries
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
         }
 
+        //----------------------------------------------------------------------------------------
         private void Return()
         {
             countryForm!.FormPostedSuccessfully = true;

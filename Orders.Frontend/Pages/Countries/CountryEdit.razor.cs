@@ -24,6 +24,7 @@ namespace Orders.Frontend.Pages.Countries
 
         [EditorRequired,Parameter] public int Id { get; set; }
 
+        //-------------------------------------------------------------------------------------
         protected override async Task OnParametersSetAsync()
         {
             var responseHttp = await Repository.GetAsync<Country>($"api/countries/{Id}");
@@ -46,6 +47,7 @@ namespace Orders.Frontend.Pages.Countries
             }
         }
 
+        //-------------------------------------------------------------------------------------
         private async Task EditAsync()
         {
             var responseHTTP = await Repository.PutAsync("api/countries", country);
@@ -70,6 +72,7 @@ namespace Orders.Frontend.Pages.Countries
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
         }
 
+        //-------------------------------------------------------------------------------------
         private void Return()
         {
             countryForm!.FormPostedSuccessfully = true;

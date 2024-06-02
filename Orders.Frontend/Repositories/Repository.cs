@@ -51,7 +51,7 @@ namespace Orders.Frontend.Repositories
                 return new HttpResponseWrapper<TActionResponse>(response, false, responseHttp);
             }
 
-            return new HttpResponseWrapper<TActionResponse>(default, !responseHttp.IsSuccessStatusCode, responseHttp);
+            return new HttpResponseWrapper<TActionResponse>(default, true, responseHttp);
         }
 
         //-------------------------------------------------------------------------------------
@@ -86,18 +86,17 @@ namespace Orders.Frontend.Repositories
         }
 
         //-------------------------------------------------------------------------------------
-        private async Task<T> UnserializeAnswerAsync<T>(HttpResponseMessage responseHttp)
-        {
-            var response = await responseHttp.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
-        }
-
-        //-------------------------------------------------------------------------------------
         public async Task<HttpResponseWrapper<object>> GetAsync(string url)
         {
             var responseHTTP = await _httpClient.GetAsync(url);
             return new HttpResponseWrapper<object>(null, !responseHTTP.IsSuccessStatusCode, responseHTTP);
         }
 
+        //-------------------------------------------------------------------------------------
+        private async Task<T> UnserializeAnswerAsync<T>(HttpResponseMessage responseHttp)
+        {
+            var response = await responseHttp.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
+        }
     }
 }
