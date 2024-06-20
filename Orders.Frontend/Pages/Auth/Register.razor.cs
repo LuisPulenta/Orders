@@ -16,7 +16,7 @@ namespace Orders.Frontend.Pages.Auth
         private List<City>? cities;
         private bool loading;
         private string? imageUrl;
-        private string titulo;
+        private string? titulo;
 
         [Parameter, SupplyParameterFromQuery] public bool IsAdmin { get; set; }
 

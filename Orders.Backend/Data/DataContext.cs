@@ -10,7 +10,6 @@ namespace Orders.Backend.Data
         {
         }
 
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }

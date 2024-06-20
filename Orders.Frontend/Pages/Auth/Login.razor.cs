@@ -48,6 +48,5 @@ namespace Orders.Frontend.Pages.Auth
             wasClose = true;
             await BlazoredModal.CloseAsync(ModalResult.Ok());
         }
-
     }
 }

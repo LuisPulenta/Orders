@@ -20,6 +20,7 @@ namespace Orders.Backend.Repositories.Implementations
             _usersRepository = usersRepository;
         }
 
+        //--------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<IEnumerable<Order>>> GetAsync(string email, PaginationDTO pagination)
         {
             var user = await _usersRepository.GetUserAsync(email);
@@ -54,6 +55,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //--------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<int>> GetTotalPagesAsync(string email, PaginationDTO pagination)
         {
             var user = await _usersRepository.GetUserAsync(email);
@@ -83,6 +85,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //--------------------------------------------------------------------------------------------------
         public override async Task<ActionResponse<Order>> GetAsync(int id)
         {
             var order = await _context.Orders
@@ -111,6 +114,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //--------------------------------------------------------------------------------------------------
         public async Task<ActionResponse<Order>> UpdateFullAsync(string email, OrderDTO orderDTO)
         {
             var user = await _usersRepository.GetUserAsync(email);
@@ -160,6 +164,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //--------------------------------------------------------------------------------------------------
         private async Task ReturnStockAsync(Order order)
         {
             foreach (var orderDetail in order.OrderDetails!)

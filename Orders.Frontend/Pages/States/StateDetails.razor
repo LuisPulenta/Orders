@@ -42,8 +42,6 @@ else
                             <td>
                                         <a class="btn btn-warning btn-sm" @onclick=@(() => ShowModalAsync(city.Id, true))><i class="bi bi-pencil" /> Editar</a>
                                         <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(city))><i class="bi bi-trash" /> Borrar</button>
-
-
                             </td>
                         </tr>
                     }
@@ -53,5 +51,4 @@ else
     </GenericList>
         </div>
     </div>
-
 }

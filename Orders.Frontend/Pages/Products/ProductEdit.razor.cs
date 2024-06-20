@@ -53,6 +53,7 @@ namespace Orders.Frontend.Pages.Products
             loading = false;
         }
 
+        //----------------------------------------------------------------------------------------------------------------
         private ProductDTO ToProductDTO(Product product)
         {
             return new ProductDTO

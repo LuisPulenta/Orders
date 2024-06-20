@@ -25,6 +25,7 @@ namespace Orders.Frontend.Pages.Products
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
 
+        //-------------------------------------------------------------------------------------------------
         protected override async Task OnInitializedAsync()
         {
             var httpActionResponse = await Repository.GetAsync<List<Category>>("/api/categories/combo");
@@ -40,6 +41,7 @@ namespace Orders.Frontend.Pages.Products
             nonSelectedCategories = httpActionResponse.Response!;
         }
 
+        //-------------------------------------------------------------------------------------------------
         private async Task CreateAsync()
         {
             var httpActionResponse = await Repository.PostAsync("/api/products/full", productDTO);
@@ -53,6 +55,7 @@ namespace Orders.Frontend.Pages.Products
             Return();
         }
 
+        //-------------------------------------------------------------------------------------------------
         private void Return()
         {
             productForm!.FormPostedSuccessfully = true;
